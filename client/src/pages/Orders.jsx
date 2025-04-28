@@ -44,6 +44,16 @@ const Orders = () => {
     }
   };
 
+  //query to set order as cancelled
+  const cancelOrder = async(orderId) => {
+    try{
+      await axios.patch(`http://localhost:5000/api/orders/cancelled/${orderId}/cancel`);
+      fetchOrders();
+    }catch(err){
+      console.error('Error cancelling order:',err);
+    }
+  };
+
   return (
     <div>
       <AdNavBar />
@@ -68,6 +78,7 @@ const Orders = () => {
             <th>Order Date</th>
             <th>Total Amount</th>
             <th>Status</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -83,6 +94,9 @@ const Orders = () => {
               
               <td>    
                   <button onClick={() => completeOrder(order.Sup_Ord_ID)}>Mark as Completed</button>
+              </td>
+              <td>
+                  <button onClick={() => cancelOrder(order.Sup_Ord_ID)}>Cancel Order</button>
               </td>
             </tr>
           ))}

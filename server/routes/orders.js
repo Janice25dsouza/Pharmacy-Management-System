@@ -98,4 +98,19 @@ router.patch('/completed/:id/complete',(req,res)=>{
   });
 });
 
+//query to set status as cancelled 
+router.patch('/cancelled/:id/cancel',(req,res)=>{
+    const orderId = req.params.id;
+    const query = `update supplier_order
+                   set Status = 'Cancelled'
+                   where Sup_Ord_Id=?`;
+    db.query(query,[orderId],(err,result) => {
+        if(err) {
+            console.error('Error updating order status to cancelled:',err);
+            return res.status(500).json({error:'Internal server Error'});
+        }
+        res.status(200).json({ message: 'Order marked as cancelled' });
+    });
+});
+
 module.exports = router;

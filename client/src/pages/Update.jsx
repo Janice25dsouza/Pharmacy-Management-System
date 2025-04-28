@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import AdNavbar from '../components/AdNavbar';
+import AdNavbar from '../components/AdNavBar';
 import NewMedModal from '../components/NewMedModal';
 import MedicineCard from '../components/MedicineCard';
 import axios from 'axios';
