@@ -27,5 +27,19 @@ router.delete('/delete/:id', (req, res) => {
   });
 });
 
+router.patch('/reset/:id',(req,res)=>{
+  const Medicine_ID=req.params.id;
+  const query = `update medicine_catalog 
+                 set Quantity_In_Stock=0
+                 where Medicine_ID =?`;
+  db.query(query, [Medicine_ID], (err, result) => {
+    if (err) {
+      console.error('Error resetting medicine quantity:', err);
+      return res.status(500).json({ error: 'Failed to reset medicine' });
+    }
+    res.status(200).json({ message: 'Medicine resetted successfully' });
+  });
+})
+
 
 module.exports = router;

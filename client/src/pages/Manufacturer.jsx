@@ -93,16 +93,16 @@ const Manufacturer = () => {
                         alignItems: 'center',
                     }}
                     >
-                    <div style={{ backgroundColor: 'black', padding: '30px', borderRadius: '8px' }}>
-                        <h3>Manufacturer Details</h3>
-                        <p><strong>ID:</strong> {selectedManufacturer.Manufacturer_ID}</p>
-                        <p><strong>Name:</strong> {selectedManufacturer.Name}</p>
-                        <p><strong>Contact Number:</strong> {selectedManufacturer.Contact_Number}</p>
+                        <div style={{ backgroundColor: 'black', padding: '30px', borderRadius: '8px' }}>
+                            <h3>Manufacturer Details</h3>
+                            <p><strong>ID:</strong> {selectedManufacturer.Manufacturer_ID}</p>
+                            <p><strong>Name:</strong> {selectedManufacturer.Name}</p>
+                            <p><strong>Contact Number:</strong> {selectedManufacturer.Contact_Number}</p>
 
-                        <button onClick={closeModal} style={{ marginTop: '20px', padding: '8px 16px' }}>
-                        Close
-                        </button>
-                    </div>
+                            <button onClick={closeModal} style={{ marginTop: '20px', padding: '8px 16px' }}>
+                            Close
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

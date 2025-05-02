@@ -8,6 +8,7 @@ const newMedModalRoute = require("./routes/newmedmodal");
 const updateMedicine = require('./routes/updatemedicine');
 const manufacturerRoutes = require('./routes/manufacturer');
 const orderRoutes = require("./routes/orders");
+const pharmacyRoutes = require("./routes/pharmacy");
 const db = require("./db");
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use('/update',updateRoutes);
 app.use('/api/updatemed',updateMedicine);
 app.use('/api/manufacturer',manufacturerRoutes);
 app.use('/api/orders',orderRoutes);
+app.use('/api/pharmacy',pharmacyRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,() => {

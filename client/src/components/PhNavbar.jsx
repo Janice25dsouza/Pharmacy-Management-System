@@ -10,9 +10,8 @@ const AdNavbar = () => {
       </div>
       <ul className="navbar-links">
         <li><Link to="/">Logout</Link></li>
-        <li><Link to="/admin">Dashboard</Link></li>
-        <li><Link to="/update">Update</Link></li>
-        <li><Link to="/orders">Orders</Link></li>
+        <li><Link to="/pharmacy">Dashboard</Link></li>
+        <li><Link to="/discount">Discount</Link></li>
       </ul>
     </nav>
   )

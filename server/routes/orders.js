@@ -104,6 +104,7 @@ router.patch('/cancelled/:id/cancel',(req,res)=>{
     const query = `update supplier_order
                    set Status = 'Cancelled'
                    where Sup_Ord_Id=?`;
+    
     db.query(query,[orderId],(err,result) => {
         if(err) {
             console.error('Error updating order status to cancelled:',err);
@@ -111,6 +112,18 @@ router.patch('/cancelled/:id/cancel',(req,res)=>{
         }
         res.status(200).json({ message: 'Order marked as cancelled' });
     });
+    
 });
+router.delete(`/delete`, (req, res) => {
+    const { Sup_Ord_Id } = req.body;
+    const query = `DELETE FROM supplier_order WHERE Sup_Ord_ID = ?`; // Use Sup_Ord_ID to delete specific order
+    db.query(query, [Sup_Ord_Id], (err, result) => {
+      if (err) {
+        console.error('Error deleting order:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.status(200).json({ message: 'Order deleted successfully' });
+    });
+  });
 
 module.exports = router;

@@ -13,6 +13,14 @@ const MedicineCard = ({medicine,onDeleted}) => {
     }
   };
 
+  const handleReset = async() =>{
+    try{
+      await axios.patch(`http://localhost:5000/update/reset/${medicine.Medicine_ID}`);
+      onDeleted();
+    }catch(err){
+      console.log('Error resetting medicine quantity:',err);
+    }
+  };
 
   
     
@@ -27,6 +35,7 @@ const MedicineCard = ({medicine,onDeleted}) => {
           <p><strong>Manufacturer ID:</strong> {medicine.Manufacturer_ID}</p>
 
           <button onClick={handleDelete}>Delete</button>
+          <button onClick={handleReset}>Reset</button>
         
         
       

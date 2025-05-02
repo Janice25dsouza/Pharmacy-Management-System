@@ -44,13 +44,16 @@ const Orders = () => {
     }
   };
 
-  //query to set order as cancelled
-  const cancelOrder = async(orderId) => {
-    try{
+  //query to set order as cancelled and delete it
+  const cancelOrder = async (orderId) => {
+    try {
       await axios.patch(`http://localhost:5000/api/orders/cancelled/${orderId}/cancel`);
-      fetchOrders();
-    }catch(err){
-      console.error('Error cancelling order:',err);
+      await axios.delete('http://localhost:5000/api/orders/delete', {
+        data: { Sup_Ord_Id: orderId } // Pass the Sup_Ord_ID for deletion
+      });
+      fetchOrders(); // Refresh orders
+    } catch (err) {
+      console.error('Error cancelling or deleting order:', err);
     }
   };
 
