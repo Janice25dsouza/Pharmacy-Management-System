@@ -12,9 +12,7 @@ const Pharmacy = () => {
   const [showExistCustModal, setShowExistCustModal] = useState(false);
   const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
   const [showGenBillButton, setShowGenBillButton] = useState(false);
-  const [showBill,setShowBill] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState('');
-  const [discounts, setDiscounts] = useState([]);
   const [formData, setFormData] = useState({
     Customer_ID: '',
     Name: '',
@@ -31,10 +29,8 @@ const Pharmacy = () => {
     prescriptionDate: '',
     validityDate: ''
   });
-  const [orderId, setOrderId] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [billData, setBillData] = useState({ orderDate: '', items: [], totalAmount: 0 });
 
 
   const fetchMedicines = async () => {
@@ -46,18 +42,8 @@ const Pharmacy = () => {
     }
   };
 
-  const fetchDiscounts = async() => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/pharmacy/discounts');
-      setDiscounts(res.data.data);
-    } catch (err) {
-      console.error('Error fetching discounts:', err);
-    }
-  }
-
   useEffect(() => {
     fetchMedicines();
-    fetchDiscounts();
   }, []);
 
   const handleConfirmationModal = () => {
@@ -65,7 +51,6 @@ const Pharmacy = () => {
     const items = Object.entries(cart).map(([medicineId, quantity]) => {
       const medicine = medicines.find(med => med.Medicine_ID.toString() === medicineId);
       return {
-        medicineId:medicineId,
         name: medicine ? medicine.Medicine_Name : `Unknown (${medicineId})`,
         quantity: quantity
       };
@@ -197,93 +182,6 @@ const Pharmacy = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
-  };
-
-   // Get next order ID
-   const getNewOrderID = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/pharmacy/neworderid');
-      const lastId = res.data.data ? res.data.data.Order_ID : 0;
-      setOrderId(lastId + 1);
-      console.log("orderID:"+orderId);
-      return(orderId);
-    } catch (err) {
-      console.error('Error fetching last order id:', err);
-    }
-  };
-
-  const fetchPrice = async(medicineId) => {
-    try{
-      const res = await axios.get(`http://localhost:5000/api/pharmacy/price?name=${medicineId}`);
-      return res.data.data.Price_Per_Unit;
-    } catch(err) {
-      console.error('Error fetching medicine price:', err);
-      return 0;
-    }
-  };
-  // Handle clicking "Generate Bill"
-  const handleGenerateBill = async () => {
-    const ordid=await getNewOrderID();
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    try {
-      for (const item of cartItems) {
-        const unitPrice =await fetchPrice(item.medicineId);
-        const payload = {
-          Order_ID: ordid,
-          Customer_ID: parseInt(selectedCustomerId),
-          Order_Date: today,
-          Medicine_ID: item.medicineId,
-          Med_Quantity: item.quantity,
-          Total_Amount: item.quantity * unitPrice
-        };
-        await axios.post('http://localhost:5000/api/pharmacy/order', payload);
-      }
-      await fetchBill(ordid);
-      setSuccess('Order placed successfully!');
-      setError('');
-      //getNewOrderID(); // prepare next order
-      localStorage.removeItem('medicineCart');
-      setShowGenBillButton(false);
-      setShowBill(true);
-    } catch (err) {
-      console.error('Error placing order:', err);
-      setError('Failed to place order. Please try again.');
-    }
-    //setShowGenBillButton(false);
-    
-  };
-
-  // Fetch bill details from backend
-  const fetchBill = async (orderId) => {
-    try {
-      const res = await axios.get(`http://localhost:5000/api/pharmacy/bill?orderId=${orderId}`);
-      const rows = res.data.data;
-      if (!rows.length) return;
-      const orderDate = rows[0].Order_Date;
-      const items = rows.map(r => {
-        const med = medicines.find(m => m.Medicine_ID === r.Medicine_ID);
-        return { name: med?.Medicine_Name || `Unknown`, quantity: r.Med_Quantity, lineTotal: r.Total_Amount };
-      });
-      const subtotal = items.reduce((sum, i) => sum + i.lineTotal, 0);
-      // Determine discount percent using descending thresholds
-      // ensure discounts sorted descending by Amount
-      const sortedDiscounts = [...discounts].sort((a, b) => b.Amount - a.Amount);
-      let discountPercent = 0;
-      for (const d of sortedDiscounts) {
-        if (subtotal >= d.Amount) {
-          discountPercent = d.Percentage;
-          break;
-        }
-      }
-      const discountAmount = (subtotal * discountPercent) / 100;
-      const totalAmount = subtotal - discountAmount;
-      setBillData({ orderDate, items, subtotal, discountPercent, discountAmount, totalAmount });
-      setShowBill(true);
-      return (
-        (true))
-    } catch (err) {
-      console.error('Error loading bill:', err);
-    }
   };
 
   const handleClose = () => {
@@ -559,47 +457,10 @@ const Pharmacy = () => {
                 }}
               >
                 <div style={{ backgroundColor: 'black', padding: '30px', borderRadius: '8px' }}>
-                  <button onClick={handleGenerateBill}>Generate Bill</button>                 
+                  <button>Generate Bill</button>                 
                 </div>
               </div>
-      )}
-
-      {showBill && (
-                    <div
-                      style={{
-                        position: 'fixed',
-                        top: '0',
-                        left: '0',
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <div style={{ backgroundColor: 'black', padding: '30px', borderRadius: '8px' }}>
-                        <h2>Bill</h2>
-                        <p><strong>Date:</strong> {billData.orderDate}</p>
-                        <table style={{width:'100%',borderCollapse:'collapse'}}>
-                          <thead>
-                            <tr><th>Medicine</th><th>Qty</th><th>Price</th></tr>
-                          </thead>
-                          <tbody>
-                            {billData.items.map((it,i)=>(
-                              <tr key={i}><td>{it.name}</td><td style={{textAlign:'center'}}>{it.quantity}</td><td style={{textAlign:'right'}}>{it.lineTotal.toFixed(2)}</td></tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        <p><strong>Subtotal:</strong> {billData.subtotal.toFixed(2)}</p>
-                        <p><strong>Discount ({billData.discountPercent}%):</strong> -{billData.discountAmount.toFixed(2)}</p>
-                        <h3 style={{textAlign:'right'}}>Total to Pay: {billData.totalAmount.toFixed(2)}</h3>
-                        <button onClick={()=>setShowBill(false)}>Close</button>    
-                      </div>
-                    </div>
-      )}
-
-      
+            )}
     </div>
   );
 };

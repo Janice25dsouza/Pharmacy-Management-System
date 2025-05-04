@@ -1,0 +1,48 @@
+.medicine-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    background-color: black;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .medicine-card p {
+    margin: 4px 0;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .delete-btn {
+    background-color: #6d170d;
+    color: #fff;
+  }
+
+  .delete-btn:hover{
+    background-color: #a93528;
+  }
+  
+  .reset-btn {
+    background-color: #084d7c;
+    color: #fff;
+  }
+
+  .reset-btn:hover{
+    background-color: #166ea9;
+  }
+  
+  .btn:hover {
+    opacity: 0.9;
+  }
