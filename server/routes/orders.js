@@ -126,4 +126,15 @@ router.delete(`/delete`, (req, res) => {
     });
   });
 
+  router.delete(`/deletecompleted`, (req, res) => {
+    const query = `DELETE FROM supplier_order WHERE Status = 'Completed'`; 
+    db.query(query, (err, result) => {
+      if (err) {
+        console.error('Error deleting completed order:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.status(200).json({ message: 'Completed orders deleted successfully' });
+    });
+  });
+
 module.exports = router;

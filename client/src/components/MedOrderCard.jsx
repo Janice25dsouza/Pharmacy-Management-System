@@ -32,16 +32,29 @@ const MedOrderCard = ({ medicine }) => {
     updateQuantityFromLocalStorage();
   };
 
+  const handleExpiryLow = (expDate,qty,medId) => {
+    const today = new Date();
+    if(expDate<today){
+      alert("Cannot place order!!! Medicine stock has expired");
+    } else if(qty==0){
+      alert("Cannot place order!!! Medicine out of stock");
+    }
+    else{
+      handleAddToCart(medId);
+    };
+  }
+
   return (
     <div className="medicine-card">
       <p><strong>ID:</strong> {medicine.Medicine_ID}</p>
       <p><strong>Name:</strong> {medicine.Medicine_Name}</p>
       <p><strong>Expiry:</strong> {medicine.Expiry_Date}</p>
       <p><strong>Price:</strong> {medicine.Price_Per_Unit}</p>
+      <p><strong>Available qty:</strong> {medicine.Quantity_In_Stock}</p>
       <p><strong>Manufacturer ID:</strong> {medicine.Manufacturer_ID}</p>
 
       <div>
-        <button onClick={() => handleAddToCart(medicine.Medicine_ID)}>Add</button>
+        <button onClick={() => handleExpiryLow(medicine.Expiry_Date,medicine.Quantity_In_Stock,medicine.Medicine_ID)}>Add</button>
         <span style={{ margin: '0 10px' }}><strong>Qty:</strong> {quantity}</span>
         <button onClick={() => handleRemove(medicine.Medicine_ID)}>Remove</button>
       </div>
@@ -50,3 +63,4 @@ const MedOrderCard = ({ medicine }) => {
 };
 
 export default MedOrderCard;
+//<button onClick={() => handleAddToCart(medicine.Medicine_ID)}>Add</button>

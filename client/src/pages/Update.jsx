@@ -16,8 +16,17 @@ const Update = () => {
     }
   };
 
+  const deleteCompleted = async() => {
+    try{
+      await axios.delete('http://localhost:5000/api/orders/deletecompleted');
+    }catch(err){
+      console.error('Error deleting completed orders',err);
+    }
+  }
+
   useEffect(() =>{
     fetchMedicines();
+    deleteCompleted();
   },[]);
 
   const [showModal,setShowModal] = useState(false);

@@ -11,7 +11,6 @@ const AdNavbar = () => {
       <ul className="navbar-links">
         <li><Link to="/">Logout</Link></li>
         <li><Link to="/pharmacy">Dashboard</Link></li>
-        <li><Link to="/discount">Discount</Link></li>
       </ul>
     </nav>
   )
