@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PhNavbar from '../components/PhNavbar';
 import MedOrderCard from '../components/MedOrderCard';
 import axios from 'axios';
+import '../styles/MedicineCard.css';
 
 const Pharmacy = () => {
   const [medicines, setMedicines] = useState([]);
@@ -302,12 +303,14 @@ const Pharmacy = () => {
       <h2>MEDICINES</h2>
       <button onClick={handleConfirmationModal}>place order</button>
       
-      {medicines.map((med) => (
-        <MedOrderCard 
-          key={med.Medicine_ID}
-          medicine={med}
-        />
-      ))}
+      <div className="medicine-grid">
+        {medicines.map((med) => (
+          <MedOrderCard 
+            key={med.Medicine_ID}
+            medicine={med}
+          />
+        ))}
+      </div>
 
       {showConfirmationModal && (
         <div

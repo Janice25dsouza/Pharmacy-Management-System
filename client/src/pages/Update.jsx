@@ -3,6 +3,7 @@ import AdNavbar from '../components/AdNavBar';
 import NewMedModal from '../components/NewMedModal';
 import MedicineCard from '../components/MedicineCard';
 import axios from 'axios';
+import '../styles/MedicineCard.css';
 
 const Update = () => {
   const [medicines,setMedicines] = useState([]);
@@ -37,12 +38,15 @@ const Update = () => {
       <button onClick={()=> setShowModal(true)}>+</button>
       <NewMedModal isOpen={showModal} onClose={()=>setShowModal(false)} onAdded={fetchMedicines}/>
 
-      {medicines.map((med) => (
-        <MedicineCard
-          key={med.Medicine_ID}
-          medicine={med} onDeleted={fetchMedicines}
-        />
-      ))}
+      <div className="medicine-grid">
+        {medicines.map((med) => (
+          <MedicineCard
+            key={med.Medicine_ID}
+            medicine={med}
+            onDeleted={fetchMedicines}
+          />
+        ))}
+      </div>
     </div>
   );
 };
